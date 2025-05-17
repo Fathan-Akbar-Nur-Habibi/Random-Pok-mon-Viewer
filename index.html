@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Pokemon Character</title>
+</head>
+<body>
+ <h1>Random Pokemon Character</h1>
+
+ <button id="getPokemon"> Get Pokemon</button>
+ <div id="pokemon"> 
+    <p><strong>Name:</strong> <span id="name">-</span></p>
+    <img id="image" src=" " alt="figure Pokemon" style="display:none;" width="150" /> 
+    <p><strong>Type:</strong><span id="type">-</span></p>
+    <button id="getType" style="display:none;">Display Type Pokemon</button>
+</div>
+
+<script> 
+
+    const getPokemon = document.querySelector('#getPokemon'); 
+    const getTypeBtn = document.querySelector('#getType');
+    const nameField = document.querySelector('#name'); 
+    const typeField = document.querySelector('#type');
+    const image = document.querySelector('#image');
+
+    let currentPokemon = null; 
+    
+    getPokemon.addEventListener('click', async () => { 
+        const randomId = Math.floor(Math.random() * 151) + 1; // 1-151 pokemon
+        const url = `https://pokeapi.co/api/v2/pokemon/${randomId}`;
+
+        try { 
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Failed to fetch data');
+
+            const data = await response.json();
+            currentPokemon = data;
+
+            nameField.textContent = data.name;
+            image.src = data.sprites.front_default; 
+            image.style.display = 'inline-block';
+            typeField.textContent = '-';
+            getTypeBtn.style.display = 'inline-block';
+        } catch (err) { 
+            alert("An error occurred while retrieving Pokémon data.");
+            console.error(err);
+        }
+    });
+
+    getTypeBtn.addEventListener('click', () => {
+        if (!currentPokemon) return;
+
+        const types = currentPokemon.types.map(t => t.type.name).join(', ');
+        typeField.textContent = types;
+    });
+</script> 
+
+</script> 
+</body>
+</html>
